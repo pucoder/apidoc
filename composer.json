@@ -1,8 +1,8 @@
 {
   "name": "pucoder/apidoc",
-  "description": "Automatically generate online test interfaces and documents",
+  "description": "apidoc interface document automatic compilation package",
   "minimum-stability": "stable",
-  "keywords": ["package", "library", "laravel", "apidoc"],
+  "keywords": ["package", "library", "laravel", "lumen", "apidoc"],
   "license": "MIT",
   "version": "v1.0.1",
   "type": "library",
