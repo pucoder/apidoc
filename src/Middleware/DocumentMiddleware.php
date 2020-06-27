@@ -1,5 +1,5 @@
 <?php
-namespace Coderpu\Document\Middleware;
+namespace Pucoder\Apidoc\Middleware;
 
 use Closure;
 

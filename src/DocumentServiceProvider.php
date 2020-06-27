@@ -1,5 +1,5 @@
 <?php
-namespace Coderpu\Document;
+namespace Pucoder\Apidoc;
 
 use Illuminate\Support\ServiceProvider;
 
