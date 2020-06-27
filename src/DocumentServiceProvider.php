@@ -1,5 +1,5 @@
 <?php
-namespace Coder\Document;
+namespace Coderpu\Document;
 
 use Illuminate\Support\ServiceProvider;
 

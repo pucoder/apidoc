@@ -1,5 +1,5 @@
 <?php
-namespace Coder\Document\Middleware;
+namespace Coderpu\Document\Middleware;
 
 use Closure;
 
