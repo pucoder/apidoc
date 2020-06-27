@@ -1,5 +1,5 @@
 {
-  "name": "CoderMrPu/apidoc",
+  "name": "coder-pu/apidoc",
   "description": "Automatically generate online test interfaces and documents",
   "minimum-stability": "stable",
   "keywords": ["package", "library", "laravel", "apidoc"],
