@@ -1,0 +1,33 @@
+{
+  "name": "CoderMrPu/apidoc",
+  "description": "Automatically generate online test interfaces and documents",
+  "minimum-stability": "stable",
+  "keywords": ["package", "library", "laravel", "apidoc"],
+  "license": "MIT",
+  "version": "v1.0.1",
+  "type": "library",
+  "authors": [
+    {
+      "name": "pudejun",
+      "email": "xiaozhi2015@hotmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Coderpu\\Document\\": "src/"
+    }
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": false,
+    "secure-http" : false,
+    "optimize-autoloader": true
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Coderpu\\Document\\DocumentServiceProvider"
+      ]
+    }
+  }
+}
