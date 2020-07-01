@@ -1,33 +1,36 @@
 {
-  "name": "pucoder/apidoc",
-  "description": "apidoc interface document automatic compilation package",
-  "minimum-stability": "stable",
-  "keywords": ["package", "library", "laravel", "lumen", "apidoc"],
-  "license": "MIT",
-  "version": "v1.0.1",
-  "type": "library",
-  "authors": [
-    {
-      "name": "pudejun",
-      "email": "xiaozhi2015@hotmail.com"
+    "name": "pucoder/apidoc",
+    "description": "Laravel and lumen automatically generate online api documents \n Laravel和Lumen自动生成在线api文档",
+    "minimum-stability": "stable",
+    "keywords": ["document", "api", "laravel", "lumen", "apidoc"],
+    "license": "MIT",
+    "version": "v1.0.1",
+    "type": "library",
+    "authors": [
+        {
+            "name": "pudejun",
+            "email": "xiaozhi2015@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2.5",
+        "laravel/lumen-framework": "^7.0",
+        "laravelista/lumen-vendor-publish": "^7.0",
+        "league/flysystem": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pucoder\\Apidoc\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Pucoder\\Apidoc\\ApiDocServiceProvider"
+            ]
+        }
     }
-  ],
-  "autoload": {
-    "psr-4": {
-      "Pucoder\\Apidoc\\": "src/"
-    }
-  },
-  "config": {
-    "preferred-install": "dist",
-    "sort-packages": false,
-    "secure-http" : false,
-    "optimize-autoloader": true
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Pucoder\\Apidoc\\DocumentServiceProvider"
-      ]
-    }
-  }
 }

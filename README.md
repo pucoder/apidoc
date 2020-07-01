@@ -1,35 +1,28 @@
-- install apidoc
-
-```shell script
-npm install apidoc -g
-# project directory must configure apidoc.json
-# detailed configuration please refer to https://apidocjs.com/
-```
-
-- install package
+# install package
 
 ```shell script
 composer require pucoder/apidoc
 ```
 
-- copy shell script file
+# Instructions
 
-Copy `vendor/pucoder/apidoc/src/apidoc.sh` to the project directory
+- lumen 
+  ```shell
+  # registration service in bootstrap/app.php
+  $app->register(Pucoder\Apidoc\ApiDocServiceProvider::class);
 
-Modify the owner of `apidoc.sh` to be a linux user with executable permissions
+  # run command
+  php artisan vendor:publish --provider="Pucoder\Apidoc\ApiDocServiceProvider"
+  ```
+- laravel
+  ```shell
+  # run command
+  php artisan vendor:publish --provider="Pucoder\Apidoc\ApiDocServiceProvider"
+  ```
+- browse
 
-- registration service
+  http://your-domain-name/apidoc
 
-```shell script
-# lumen 
-# in bootstrap/app.php
-$app->register(Pucoder\Apidoc\DocumentServiceProvider::class);
+- how to customize the view?
 
-# laravel
-# run command
-php artisan vendor:publish --provider="Pucoder\Apidoc\DocumentServiceProvider"
-```
-
-- start visit
-
-the request path is `http://your-domain_name/api-doc`
+  Add the `view` key in the configuration file, for example:`'view' => 'apidoc'`, then the view file is `/resources/views/apidoc.blade.php`
