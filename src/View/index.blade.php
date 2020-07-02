@@ -40,7 +40,7 @@
 {{--                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"><span data-feather="calendar"></span>This week</button>--}}
 {{--                    </div>--}}
                 </div>
-                <h3>{{ $description }}</h3>
+                <h3>{!! $description !!}</h3>
             </div>
 
             <div class="section">
