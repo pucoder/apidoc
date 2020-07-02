@@ -4,7 +4,7 @@
     "minimum-stability": "stable",
     "keywords": ["document", "api", "laravel", "lumen", "apidoc"],
     "license": "MIT",
-    "version": "v1.0.4",
+    "version": "v1.0.5",
     "type": "library",
     "authors": [
         {
@@ -14,7 +14,6 @@
     ],
     "require": {
         "php": ">=7.2.5",
-        "laravel/lumen-framework": ">=6.0",
         "league/flysystem": "^1.0"
     },
     "autoload": {
