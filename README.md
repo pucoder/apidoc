@@ -1,6 +1,6 @@
 - effect
 
-![apidoc](static/vendor/apidoc/img/apidoc.png)
+![apidoc](statics/vendor/apidoc/img/apidoc.png)
 
 - example of effect
 
@@ -91,6 +91,9 @@ php artisan apidoc:publish
 
 # Register Config Files in bootstrap/app.php
 $app->configure('apidoc');
+
+# open view function
+$app->withFacades();
 ```
 
 - laravel
