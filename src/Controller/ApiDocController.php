@@ -151,9 +151,16 @@ class ApiDocController extends Controller
             // 处理接口
             if ($key === 'api') {
                 $items = explode(" ", $value);
-                $json['apiType'] = rtrim(ltrim($items[0], '{'), "}");
-                $json['apiUrl'] = $items[1];
-                $json['apiTitle'] = $items[2];
+                $json['apiTitle'] = '';
+                foreach ($items as $key => $value) {
+                    if ($key === 0) {
+                        $json['apiType'] = rtrim(ltrim($value, '{'), "}");
+                    } elseif ($key === 1) {
+                        $json['apiUrl'] = $value;
+                    } else {
+                        $json['apiTitle'] .= $value . ' ';
+                    }
+                }
             }
             // 处理请求头
             elseif ($key === 'apiHeader') {
