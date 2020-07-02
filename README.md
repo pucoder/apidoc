@@ -1,28 +1,8 @@
-# install package
+- effect
 
-```shell script
-composer require pucoder/apidoc
-```
+![apidoc](static/vendor/apidoc/img/apidoc.png)
 
-# Instructions
-
-- lumen 
-```shell
-# registration service in bootstrap/app.php
-$app->register(Pucoder\Apidoc\ApiDocServiceProvider::class);
-
-# run command
-php artisan apidoc:publish --provider="Pucoder\Apidoc\ApiDocServiceProvider"
-```
-- laravel
-```shell
-# run command
-php artisan apidoc:publish --provider="Pucoder\Apidoc\ApiDocServiceProvider"
-```
-
-> Please make relevant configuration in `config/apidoc.php` file before use
-
-- controller annotation example
+- example of effect
 
 ```php
 <?php
@@ -36,27 +16,34 @@ class DemoController extends Controller
     /**
      * @apiVersion 1.0.1
      * @apiGroup demos
-     * @apiName v1-demos-demo1
-     * @api {post} /v1/demos/demo1 v1-demo1
-     * @apiDescription this is v1-demo1
+     * @apiName v1-demos-demo
+     * @api {post} /v1/demos/demo v1-demo
+     * @apiDescription this is v1-demo
      *
-     * this is also v1-demo1
+     * this is also v1-demo
      *
-     * this is still v1-demo1
+     * this is still v1-demo
      *
+     * @apiHeader {string} header1 User's header1
+     * @apiHeader {int} [header2] User's header2
+     * @apiHeaderExample request header example:
+     * {
+     *   "header1":"lots of strings",
+     *   "header2":"lots of strings"
+     * }
      * @apiParam {int} age User's age
      * @apiParam {string} name User's name
      * @apiParam {bool} [gender] User's gender
      * @apiParam {json} [intro] User's intro
      * @apiParam {file} [avatar] User's avatar
-     * @apiParamExample successful response:
+     * @apiParamExample field examples:
      * {
      *     "bool": true,
-     *     "msg": "submitted successfully"
+     *     "msg": "submitted successfully",
      *     "data": {
      *         "age": 18,
-     *         "name": david,
-     *         "gender": true,
+     *         "name": "david",
+     *         "gender": true
      *     }
      * }
      * @apiSuccessExample successful response:
@@ -64,37 +51,56 @@ class DemoController extends Controller
      *     "bool": true,
      *     "msg": "submitted successfully"
      * }
-     */
-    public function demo1(Request $request)
-    {
-        $data = $request->all();
-        return response()->json(['bool' => true, 'msg' => 'submitted successfully', 'data' => $data]);
-    }
-
-    /**
-     * @apiVersion 1.0.1
-     * @apiGroup demos
-     * @apiName v1-demos-demo2
-     * @api {get} /v1/demos/demo2 v1-demo2
-     * @apiDescription this is v1-demo2
-     *
-     * @apiHeader {string} Authorization User authorization credentials
-     * @apiHeaderExample request header example:
-     * {
-     *   "Authorization":"lots of strings"
-     * }
      * @apiErrorExample failure response:
      * {
      *   "bool": false,
      *   "msg": "submission failed"
      * }
      */
-    public function demo2(Request $request)
+    public function demo(Request $request)
     {
-        return response()->json(['bool' => false, 'msg' => 'submission failed']);
+        try {
+            $data = $request->all();
+            if ($request->hasFile('avatar')) {
+                $data['avatar'] = $request->file('avatar')->store('users');
+            }
+            return response()->json(['bool' => true, 'msg' => 'submitted successfully', 'data' => $data]);
+        } catch (\Exception $exception) {
+            return response()->json(['code' => false, 'msg' => 'submission failed', 'data' => $exception->getMessage()]);
+        }
     }
 }
 ```
+
+# install package
+
+```shell script
+composer require pucoder/apidoc
+```
+
+# Instructions
+
+- lumen 
+
+```shell
+# Register Service Providers in bootstrap/app.php
+$app->register(Pucoder\Apidoc\ApiDocServiceProvider::class);
+
+# run command
+php artisan apidoc:publish
+
+# Register Config Files in bootstrap/app.php
+$app->configure('apidoc');
+```
+
+- laravel
+
+```shell
+# run command
+php artisan apidoc:publish
+```
+
+> Please make relevant configuration in `config/apidoc.php` file before use
 
 - browse
 

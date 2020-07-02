@@ -1,4 +1,5 @@
 <?php
+
 namespace Pucoder\Apidoc\Console;
 
 use Illuminate\Console\Command;
@@ -12,45 +13,35 @@ use League\Flysystem\MountManager;
 class ApiDocCommand extends Command
 {
     /**
-     * The filesystem instance.
+     * 文件系统
      *
      * @var \Illuminate\Filesystem\Filesystem
      */
     protected $files;
 
     /**
-     * The provider to publish.
+     * 要发布的提供者
      *
      * @var string
      */
-    protected $provider = null;
+    protected $provider = "Pucoder\Apidoc\ApiDocServiceProvider";
 
     /**
-     * The tags to publish.
-     *
-     * @var array
-     */
-    protected $tags = [];
-
-    /**
-     * The console command signature.
+     * 控制台命令
      *
      * @var string
      */
-    protected $signature = 'apidoc:publish {--force : Overwrite any existing files}
-                    {--all : Publish assets for all service providers without prompt}
-                    {--provider= : The service provider that has assets you want to publish}
-                    {--tag=* : One or many tags that have assets you want to publish}';
+    protected $signature = 'apidoc:publish {--force : Overwrite any existing files}';
 
     /**
-     * The console command description.
+     * 控制台命令说明
      *
      * @var string
      */
     protected $description = 'Publish any publishable assets from vendor packages';
 
     /**
-     * Create a new command instance.
+     * 创建一个新的命令实例
      *
      * @param  \Illuminate\Filesystem\Filesystem  $files
      * @return void
@@ -63,102 +54,15 @@ class ApiDocCommand extends Command
     }
 
     /**
-     * Execute the console command.
+     * 执行控制台命令
      *
      * @return void
      */
     public function handle()
     {
-        $this->determineWhatShouldBePublished();
-
-        foreach ($this->tags ?: [null] as $tag) {
-            $this->publishTag($tag);
-        }
-
-        $this->info('Publishing complete.');
-    }
-
-    /**
-     * Determine the provider or tag(s) to publish.
-     *
-     * @return void
-     */
-    protected function determineWhatShouldBePublished()
-    {
-        if ($this->option('all')) {
-            return;
-        }
-
-        [$this->provider, $this->tags] = [
-            $this->option('provider'), (array) $this->option('tag'),
-        ];
-
-        if (! $this->provider && ! $this->tags) {
-            $this->promptForProviderOrTag();
-        }
-    }
-
-    /**
-     * Prompt for which provider or tag to publish.
-     *
-     * @return void
-     */
-    protected function promptForProviderOrTag()
-    {
-        $choice = $this->choice(
-            "Which provider or tag's files would you like to publish?",
-            $choices = $this->publishableChoices()
-        );
-
-        if ($choice == $choices[0] || is_null($choice)) {
-            return;
-        }
-
-        $this->parseChoice($choice);
-    }
-
-    /**
-     * The choices available via the prompt.
-     *
-     * @return array
-     */
-    protected function publishableChoices()
-    {
-        return array_merge(
-            ['<comment>Publish files from all providers and tags listed below</comment>'],
-            preg_filter('/^/', '<comment>Provider: </comment>', Arr::sort(ServiceProvider::publishableProviders())),
-            preg_filter('/^/', '<comment>Tag: </comment>', Arr::sort(ServiceProvider::publishableGroups()))
-        );
-    }
-
-    /**
-     * Parse the answer that was given via the prompt.
-     *
-     * @param  string  $choice
-     * @return void
-     */
-    protected function parseChoice($choice)
-    {
-        [$type, $value] = explode(': ', strip_tags($choice));
-
-        if ($type === 'Provider') {
-            $this->provider = $value;
-        } elseif ($type === 'Tag') {
-            $this->tags = [$value];
-        }
-    }
-
-    /**
-     * Publishes the assets for a tag.
-     *
-     * @param  string  $tag
-     * @return mixed
-     */
-    protected function publishTag($tag)
-    {
         $published = false;
 
-        foreach ($this->pathsToPublish($tag) as $from => $to) {
+        foreach ($this->pathsToPublish() as $from => $to) {
             $this->publishItem($from, $to);
 
             $published = true;
@@ -167,23 +71,22 @@ class ApiDocCommand extends Command
         if ($published === false) {
             $this->error('Unable to locate publishable resources.');
         }
+
+        $this->info('Publishing complete');
     }
 
     /**
-     * Get all of the paths to publish.
+     * 获取所有要发布的路径
      *
-     * @param  string  $tag
      * @return array
      */
-    protected function pathsToPublish($tag)
+    protected function pathsToPublish()
     {
-        return ServiceProvider::pathsToPublish(
-            $this->provider, $tag
-        );
+        return ServiceProvider::pathsToPublish($this->provider);
     }
 
     /**
-     * Publish the given item from and to the given location.
+     * 从给定位置发布给定项目
      *
      * @param  string  $from
      * @param  string  $to
@@ -201,7 +104,7 @@ class ApiDocCommand extends Command
     }
 
     /**
-     * Publish the file to the given path.
+     * 将文件发布到给定的路径
      *
      * @param  string  $from
      * @param  string  $to
@@ -209,7 +112,7 @@ class ApiDocCommand extends Command
      */
     protected function publishFile($from, $to)
     {
-        if (! $this->files->exists($to) || $this->option('force')) {
+        if (!$this->files->exists($to) || $this->option('force')) {
             $this->createParentDirectory(dirname($to));
 
             $this->files->copy($from, $to);
@@ -219,7 +122,7 @@ class ApiDocCommand extends Command
     }
 
     /**
-     * Publish the directory to the given directory.
+     * 将目录发布到给定目录
      *
      * @param  string  $from
      * @param  string  $to
@@ -236,7 +139,7 @@ class ApiDocCommand extends Command
     }
 
     /**
-     * Move all the files in the given MountManager.
+     * 在给定的挂载管理器中移动所有文件
      *
      * @param  \League\Flysystem\MountManager  $manager
      * @return void
@@ -251,20 +154,20 @@ class ApiDocCommand extends Command
     }
 
     /**
-     * Create the directory to house the published files if needed.
+     * 如果需要，创建目录来容纳发布的文件
      *
      * @param  string  $directory
      * @return void
      */
     protected function createParentDirectory($directory)
     {
-        if (! $this->files->isDirectory($directory)) {
+        if (!$this->files->isDirectory($directory)) {
             $this->files->makeDirectory($directory, 0755, true);
         }
     }
 
     /**
-     * Write a status message to the console.
+     * 将状态消息写入控制台
      *
      * @param  string  $from
      * @param  string  $to

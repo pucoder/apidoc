@@ -1,4 +1,5 @@
-<html lang="en"><head>
+<html lang="{{ $lang }}">
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{{ $title }}</title>
@@ -23,7 +24,6 @@
                             @foreach($datas as $data)
                                 @if($data['apiGroup'] === $group)
                                     <li class="nav-item px-2 py-1"><a href="#{{ $data['apiName'] }}" class="text-decoration-none text-dark">{{ $data['apiTitle'] }}</a></li>
-                                    {{--                                    <li class="list-group-item border-0 pl-2 py-2 bg-light"><a href="#api-{{ $data['apiName'] }}" class="text-decoration-none">{{ $data['apiTitle'] }}</a></li>--}}
                                 @endif
                             @endforeach
                         </ul>
@@ -36,9 +36,9 @@
             <div class="header mb-3 pb-3 border-bottom">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-2">
                     <h1>{{ $name }}</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"><span data-feather="calendar"></span>This week</button>
-                    </div>
+{{--                    <div class="btn-toolbar mb-2 mb-md-0">--}}
+{{--                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"><span data-feather="calendar"></span>This week</button>--}}
+{{--                    </div>--}}
                 </div>
                 <h3>{{ $description }}</h3>
             </div>
@@ -60,13 +60,13 @@
                                     </div>
 
                                     @if($data['apiHeaders'])
-                                        <h4><b>请求头</b></h4>
+                                        <h4><b class="lang-header"></b></h4>
                                         <table class="table table-bordered">
                                             <thead>
                                             <tr class="bg-light">
-                                                <th scope="col">字段</th>
-                                                <th scope="col">类型</th>
-                                                <th scope="col">描述</th>
+                                                <th scope="col" class="lang-field"></th>
+                                                <th scope="col" class="lang-type"></th>
+                                                <th scope="col" class="lang-description"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -75,7 +75,7 @@
                                                     <td style="width: 300px;">
                                                         {{ $header['field'] }}
                                                         @if($header['optional'])
-                                                            <span class="bg-secondary text-white rounded px-2 float-right">可选</span>
+                                                            <span class="bg-secondary text-white rounded px-2 float-right lang-optional"></span>
                                                         @endif
 
                                                     </td>
@@ -88,13 +88,13 @@
                                     @endif
 
                                     @if($data['apiParams'])
-                                        <h4><b>参数</b></h4>
+                                        <h4><b class="lang-form"></b></h4>
                                         <table class="table table-bordered">
                                             <thead>
                                             <tr class="bg-light">
-                                                <th scope="col">字段</th>
-                                                <th scope="col">类型</th>
-                                                <th scope="col">描述</th>
+                                                <th scope="col" class="lang-field"></th>
+                                                <th scope="col" class="lang-type"></th>
+                                                <th scope="col" class="lang-description"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -103,7 +103,7 @@
                                                     <td style="width: 300px;">
                                                         {{ $params['field'] }}
                                                         @if($params['optional'])
-                                                            <span class="bg-secondary text-white rounded px-2 float-right">可选</span>
+                                                            <span class="bg-secondary text-white rounded px-2 float-right lang-optional"></span>
                                                         @endif
                                                     </td>
                                                     <td style="width: 300px;">{{ $params['type'] }}</td>
@@ -173,38 +173,34 @@
                                             </div>
                                         </div>
                                     @endif
-
-                                    <h4 class="mb-3"><b>发送示例请求</b></h4>
-
+                                    <h4 class="mb-3"><b class="lang-send-examples-request"></b></h4>
                                     <form id="form-{{ $data['apiName'] }}">
                                         <div class="form-group row mx-0">
-
                                             @if($data['apiHeaders'])
-                                                <h6><b>请求头参数:</b></h6>
+                                                <h6><b class="lang-header-param"></b></h6>
                                                 @foreach($data['apiHeaders'] as $headers)
-                                                    <div class="input-group mb-3">
-                                                        <label for="header-{{ $data['apiName'] }}-{{ $headers['field'] }}" class="col-sm-2 px-0 col-form-label">{{ $headers['field'] }}</label>
-                                                        <input type="text" name="headers[{{ $headers['field'] }}]" class="col-sm-10 form-control" id="header-{{ $data['apiName'] }}-{{ $headers['field'] }}" placeholder="{{ $headers['field'] }}">
-                                                        <div class="input-group-append">
-                                                            <div class="input-group-text">{{ $headers['type'] }}</div>
+                                                    @if($headers['type'] === 'string')
+                                                        <div class="input-group mb-3">
+                                                            <label for="header-{{ $data['apiName'] }}-{{ $headers['field'] }}" class="col-sm-2 px-0 col-form-label">{{ $headers['field'] }}</label>
+                                                            <input type="text" name="headers[{{ $headers['field'] }}]" class="col-sm-10 form-control" id="header-{{ $data['apiName'] }}-{{ $headers['field'] }}" placeholder="{{ $headers['field'] }}">
+                                                            <div class="input-group-append">
+                                                                <div class="input-group-text">{{ $headers['type'] }}</div>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    @elseif($headers['type'] === 'int')
+                                                        <div class="input-group mb-3">
+                                                            <label for="header-{{ $data['apiName'] }}-{{ $headers['field'] }}" class="col-sm-2 px-0 col-form-label">{{ $headers['field'] }}</label>
+                                                            <input type="number" name="headers[{{ $headers['field'] }}]" class="col-sm-10 form-control" id="header-{{ $data['apiName'] }}-{{ $headers['field'] }}" placeholder="{{ $headers['field'] }}">
+                                                            <div class="input-group-append">
+                                                                <div class="input-group-text">{{ $headers['type'] }}</div>
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 @endforeach
                                             @endif
 
                                             @if($data['apiParams'])
-                                                    <div class="form-row align-items-center">
-                                                        <div class="col-auto my-1">
-                                                            <label class="m-0"><b>表单参数:</b></label>
-                                                        </div>
-                                                        <div class="col-auto my-1">
-                                                            <label class="mr-sm-2 sr-only" for="form-type-{{ $data['apiName'] }}"></label>
-                                                            <select class="custom-select custom-select-sm mr-sm-2" id="form-type-{{ $data['apiName'] }}">
-                                                                <option value="auto" selected>auto</option>
-                                                                <option value="form-data">form-data</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                                <h6><b class="lang-form-param"></b></h6>
                                                 @foreach($data['apiParams'] as $params)
                                                     @if($params['type'] === 'string')
                                                             <div class="input-group mb-3">
@@ -217,7 +213,7 @@
                                                     @elseif($params['type'] === 'int')
                                                             <div class="input-group mb-3">
                                                                 <label for="params-{{ $data['apiName'] }}-{{ $params['field'] }}" class="col-sm-2 px-0 col-form-label">{{ $params['field'] }}</label>
-                                                                <input type="text" name="{{ $params['field'] }}" class="col-sm-10 form-control" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}" placeholder="{{ $params['field'] }}">
+                                                                <input type="number" name="{{ $params['field'] }}" class="col-sm-10 form-control" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}" placeholder="{{ $params['field'] }}">
                                                                 <div class="input-group-append">
                                                                     <div class="input-group-text">{{ $params['type'] }}</div>
                                                                 </div>
@@ -262,7 +258,7 @@
                                                                 <label class="col-sm-2 px-0 col-form-label">{{ $params['field'] }}</label>
                                                                 <div class="custom-file">
                                                                     <input type="file" name="{{ $params['field'] }}" class="custom-file-input" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}">
-                                                                    <label class="custom-file-label" for="validatedCustomFile">选择文件</label>
+                                                                    <label class="custom-file-label" for="validatedCustomFile">{{ $params['field'] }}</label>
                                                                 </div>
                                                                 <div class="input-group-append">
                                                                     <div class="input-group-text">{{ $params['type'] }}</div>
@@ -271,15 +267,14 @@
                                                     @endif
                                                 @endforeach
                                             @endif
-
                                         </div>
                                     </form>
                                     <p class="text-right">
-                                        <a class="btn btn-primary submit" href="javascript:void(0)" data-method="{{ $data['apiType'] }}" data-url="{{ $data['apiUrl'] }}" data-name="{{ $data['apiName'] }}">发送请求</a>
+                                        <a class="btn btn-primary submit lang-send-request" href="javascript:void(0)" data-method="{{ $data['apiType'] }}" data-url="{{ $data['apiUrl'] }}" data-name="{{ $data['apiName'] }}"></a>
                                     </p>
                                     <div class="collapse" id="collapse-{{ $data['apiName'] }}">
                                         <div class="d-flex justify-content-between mb-2">
-                                            <span>返回结果</span>
+                                            <span class="lang-return-result"></span>
                                             <a class="btn btn-xs btn-dark text-white px-1 py-0 closes" href="javascript:void(0)" data-name="{{ $data['apiName'] }}">X</a>
                                         </div>
 
@@ -300,35 +295,48 @@
 <script src="/vendor/apidoc/js/bootstrap.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
+        // 设置语言
+        let lang = $('html').attr('lang');
+        $.each(JSON.parse('{!! json_encode($local, true) !!}'), function (key, val) {
+            $.each(val,function (k, v) {
+                $('.lang-' + k).text(lang === key ? v : k);
+            })
+        });
+        // 关闭返回结果操作
         $('.closes').click(function () {
             let name = $(this).data('name');
             $('#collapse-' + name).collapse('hide');
         });
-
+        // 发送请求操作
         $('.submit').click(function () {
             let method = $(this).data('method');
             let url = $(this).data('url');
             let name = $(this).data('name');
-            let form_type = $('#form-type-' + name + ' option:selected').val();
+            let files = $("#form-" + name + " input[type='file']");
 
             let data = new FormData(document.getElementById("form-" + name));
 
             let headers = {};
             let params = {};
+            let delete_key = [];
             for (let key of data.keys()) {
                 // console.dir("key:" + key + " value:" + data.get(key));
                 if (key.indexOf("headers") !== -1) {
                     let field = key.substring(7).replace(/\[|]/g,'');
                     headers[field] = data.get(key);
-                    data.delete(key);
+                    delete_key.push(key);
                 } else {
-                    if (form_type === 'auto') {
+                    if (files.length <= 0) {
                         params[key] = data.get(key);
                     } else {
                         params = data;
                     }
                 }
             }
+
+            $.each(delete_key, function (key, val) {
+                data.delete(val);
+            });
 
             let ajaxRequest = {
                 url: url,
@@ -345,14 +353,14 @@
                 }
             };
 
-            if (form_type === 'form-data') {
+            if (files.length > 0) {
                 ajaxRequest.processData = false;
                 ajaxRequest.contentType = false;
             }
 
             $.ajax(ajaxRequest);
         });
-
+        // 载入示例
         $.each($('.json'),function () {
             let json = $(this).text();
             $(this).html(syntaxHighlight(json));
@@ -382,6 +390,7 @@
                 } else if (/null/.test(match)) {
                     cls = 'text-magenta';
                 }
+
                 return '<span class="' + cls + '">' + match + '</span>';
             }
         );

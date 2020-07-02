@@ -21,7 +21,6 @@ class ApiDocServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
         $this->commands($this->commands);
     }
 
@@ -32,13 +31,13 @@ class ApiDocServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__ . '/View', 'apidoc');// 指定视图目录
+        $this->loadViewsFrom(__DIR__ . '/View', 'apidoc');
 
         $this->loadRoutesFrom(__DIR__ . '/Route/routes.php');
 
         $this->publishes([
-            __DIR__ . '/../Static' => base_path('public'),
-            __DIR__ . '/../Config' => base_path('config')
+            __DIR__ . '/../config' => base_path('config'),
+            __DIR__ . '/../static' => base_path('public')
         ]);
     }
 }
