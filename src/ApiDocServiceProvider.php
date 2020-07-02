@@ -11,7 +11,7 @@ class ApiDocServiceProvider extends ServiceProvider
      * @var array
      */
     protected $commands = [
-        'VendorPublish' => 'Laravelista\LumenVendorPublish\VendorPublishCommand'
+        Console\ApiDocCommand::class
     ];
 
     /**
@@ -37,8 +37,8 @@ class ApiDocServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/Route/routes.php');
 
         $this->publishes([
-            __DIR__ . '/Static' => base_path('public'),
-            __DIR__ . '/Config' => base_path('config')
+            __DIR__ . '/../Static' => base_path('public'),
+            __DIR__ . '/../Config' => base_path('config')
         ]);
     }
 }

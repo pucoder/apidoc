@@ -12,18 +12,21 @@ composer require pucoder/apidoc
 $app->register(Pucoder\Apidoc\ApiDocServiceProvider::class);
 
 # run command
-php artisan vendor:publish --provider="Pucoder\Apidoc\ApiDocServiceProvider"
+php artisan apidoc:publish --provider="Pucoder\Apidoc\ApiDocServiceProvider"
 ```
 - laravel
 ```shell
 # run command
-php artisan vendor:publish --provider="Pucoder\Apidoc\ApiDocServiceProvider"
+php artisan apidoc:publish --provider="Pucoder\Apidoc\ApiDocServiceProvider"
 ```
-- 例子
+
+> Please make relevant configuration in `config/apidoc.php` file before use
+
+- controller annotation example
 
 ```php
+<?php
 namespace App\Http\Controllers\V1;
-
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -35,29 +38,37 @@ class DemoController extends Controller
      * @apiGroup demos
      * @apiName v1-demos-demo1
      * @api {post} /v1/demos/demo1 v1-demo1
-     * @apiDescription this is v1 demo1
+     * @apiDescription this is v1-demo1
      *
-     * 这也是版本一演示一描述
+     * this is also v1-demo1
      *
-     * 这还是版本一演示一描述
+     * this is still v1-demo1
      *
-     * @apiParam {int} field1 field11
-     * @apiParam {string} [field2] field22
-     * @apiSuccessExample 成功响应:
+     * @apiParam {int} age User's age
+     * @apiParam {string} name User's name
+     * @apiParam {bool} [gender] User's gender
+     * @apiParam {json} [intro] User's intro
+     * @apiParam {file} [avatar] User's avatar
+     * @apiParamExample successful response:
      * {
      *     "bool": true,
-     *     "msg": "提交成功"
+     *     "msg": "submitted successfully"
+     *     "data": {
+     *         "age": 18,
+     *         "name": david,
+     *         "gender": true,
+     *     }
      * }
-     *
-     * @apiErrorExample 失败响应:
+     * @apiSuccessExample successful response:
      * {
-     *   "bool": false,
-     *   "msg": "提交失败"
+     *     "bool": true,
+     *     "msg": "submitted successfully"
      * }
      */
     public function demo1(Request $request)
     {
-        return response()->json(['code' => 1, 'msg' => '提交成功']);
+        $data = $request->all();
+        return response()->json(['bool' => true, 'msg' => 'submitted successfully', 'data' => $data]);
     }
 
     /**
@@ -65,12 +76,22 @@ class DemoController extends Controller
      * @apiGroup demos
      * @apiName v1-demos-demo2
      * @api {get} /v1/demos/demo2 v1-demo2
-     * @apiDescription this is v1 demo2
-     * @apiParam {string} field1 字段一
+     * @apiDescription this is v1-demo2
+     *
+     * @apiHeader {string} Authorization User authorization credentials
+     * @apiHeaderExample request header example:
+     * {
+     *   "Authorization":"lots of strings"
+     * }
+     * @apiErrorExample failure response:
+     * {
+     *   "bool": false,
+     *   "msg": "submission failed"
+     * }
      */
     public function demo2(Request $request)
     {
-        return response()->json($request->all(), 200, $headers);
+        return response()->json(['bool' => false, 'msg' => 'submission failed']);
     }
 }
 ```
