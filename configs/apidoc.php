@@ -56,7 +56,8 @@ return [
             'optional' => '可选',
             'send-examples-request' => '发送示例请求',
             'send-request' => '发送请求',
-            'return-result' => '返回结果'
+            'return-result' => '返回结果',
+            'choose...' => '选择...'
         ]
     ]
 ];

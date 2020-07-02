@@ -182,7 +182,7 @@
                                                     @if($headers['type'] === 'string')
                                                         <div class="input-group mb-3">
                                                             <label for="header-{{ $data['apiName'] }}-{{ $headers['field'] }}" class="col-sm-2 px-0 col-form-label">{{ $headers['field'] }}</label>
-                                                            <input type="text" name="headers[{{ $headers['field'] }}]" class="col-sm-10 form-control" id="header-{{ $data['apiName'] }}-{{ $headers['field'] }}" placeholder="{{ $headers['field'] }}">
+                                                            <input type="text" name="headers[{{ $headers['field'] }}]" class="col-sm-10 form-control" id="header-{{ $data['apiName'] }}-{{ $headers['field'] }}" placeholder="{{ $headers['field'] }}" @if($headers['optional']) required @endif>
                                                             <div class="input-group-append">
                                                                 <div class="input-group-text">{{ $headers['type'] }}</div>
                                                             </div>
@@ -190,7 +190,7 @@
                                                     @elseif($headers['type'] === 'int')
                                                         <div class="input-group mb-3">
                                                             <label for="header-{{ $data['apiName'] }}-{{ $headers['field'] }}" class="col-sm-2 px-0 col-form-label">{{ $headers['field'] }}</label>
-                                                            <input type="number" name="headers[{{ $headers['field'] }}]" class="col-sm-10 form-control" id="header-{{ $data['apiName'] }}-{{ $headers['field'] }}" placeholder="{{ $headers['field'] }}">
+                                                            <input type="number" name="headers[{{ $headers['field'] }}]" class="col-sm-10 form-control" id="header-{{ $data['apiName'] }}-{{ $headers['field'] }}" placeholder="{{ $headers['field'] }}" @if($headers['optional']) required @endif>
                                                             <div class="input-group-append">
                                                                 <div class="input-group-text">{{ $headers['type'] }}</div>
                                                             </div>
@@ -205,7 +205,7 @@
                                                     @if($params['type'] === 'string')
                                                             <div class="input-group mb-3">
                                                                 <label for="params-{{ $data['apiName'] }}-{{ $params['field'] }}" class="col-sm-2 px-0 col-form-label">{{ $params['field'] }}</label>
-                                                                <input type="text" name="{{ $params['field'] }}" class="col-sm-10 form-control" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}" placeholder="{{ $params['field'] }}">
+                                                                <input type="text" name="{{ $params['field'] }}" class="col-sm-10 form-control" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}" placeholder="{{ $params['field'] }}" @if($params['optional']) required @endif>
                                                                 <div class="input-group-append">
                                                                     <div class="input-group-text">{{ $params['type'] }}</div>
                                                                 </div>
@@ -213,51 +213,36 @@
                                                     @elseif($params['type'] === 'int')
                                                             <div class="input-group mb-3">
                                                                 <label for="params-{{ $data['apiName'] }}-{{ $params['field'] }}" class="col-sm-2 px-0 col-form-label">{{ $params['field'] }}</label>
-                                                                <input type="number" name="{{ $params['field'] }}" class="col-sm-10 form-control" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}" placeholder="{{ $params['field'] }}">
+                                                                <input type="number" name="{{ $params['field'] }}" class="col-sm-10 form-control" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}" placeholder="{{ $params['field'] }}" @if($params['optional']) required @endif>
                                                                 <div class="input-group-append">
                                                                     <div class="input-group-text">{{ $params['type'] }}</div>
                                                                 </div>
                                                             </div>
                                                     @elseif($params['type'] === 'bool')
                                                             <div class="input-group mb-3">
-                                                                <label class="col-sm-2 px-0 col-form-label">{{ $params['field'] }}</label>
-                                                                <div class="align-self-center">
-                                                                    <div class="custom-control custom-radio custom-control-inline">
-                                                                        <input type="radio" name="{{ $params['field'] }}" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}1" value="true" class="custom-control-input">
-                                                                        <label class="custom-control-label" for="params-{{ $data['apiName'] }}-{{ $params['field'] }}1">true</label>
-                                                                    </div>
-                                                                    <div class="custom-control custom-radio custom-control-inline">
-                                                                        <input type="radio" name="{{ $params['field'] }}" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}2" value="false" class="custom-control-input">
-                                                                        <label class="custom-control-label" for="params-{{ $data['apiName'] }}-{{ $params['field'] }}2">false</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="input-group-text">{{ $params['type'] }}</div>
-                                                            </div>
-                                                    @elseif($params['type'] === 'json')
-                                                            <div class="input-group mb-3">
                                                                 <label for="params-{{ $data['apiName'] }}-{{ $params['field'] }}" class="col-sm-2 px-0 col-form-label">{{ $params['field'] }}</label>
-                                                                <textarea name="{{ $params['field'] }}" class="form-control" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}" placeholder="{{ $params['field'] }}"></textarea>
+                                                                <select class="custom-select" name="{{ $params['field'] }}" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}" @if($params['optional']) required @endif>
+                                                                    <option value="" class="lang-choose..."></option>
+                                                                    <option value="true">true</option>
+                                                                    <option value="false">false</option>
+                                                                </select>
                                                                 <div class="input-group-append">
                                                                     <div class="input-group-text">{{ $params['type'] }}</div>
                                                                 </div>
                                                             </div>
-                                                    @elseif($params['type'] === 'select')
-                                                        <div class="input-group mb-3">
-                                                            <label for="params-{{ $data['apiName'] }}-{{ $params['field'] }}" class="col-sm-2 px-0 col-form-label">{{ $params['field'] }}</label>
-                                                            <select class="custom-select" name="{{ $params['field'] }}" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}">
-                                                                <option value="">Choose...</option>
-                                                                <option value="1">One</option>
-                                                                <option value="2">Two</option>
-                                                            </select>
-                                                            <div class="input-group-append">
-                                                                <div class="input-group-text">{{ $params['type'] }}</div>
+                                                    @elseif($params['type'] === 'json')
+                                                            <div class="input-group mb-3">
+                                                                <label for="params-{{ $data['apiName'] }}-{{ $params['field'] }}" class="col-sm-2 px-0 col-form-label">{{ $params['field'] }}</label>
+                                                                <textarea name="{{ $params['field'] }}" class="form-control" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}" placeholder="{{ $params['field'] }}" @if($params['optional']) required @endif></textarea>
+                                                                <div class="input-group-append">
+                                                                    <div class="input-group-text">{{ $params['type'] }}</div>
+                                                                </div>
                                                             </div>
-                                                        </div>
                                                     @elseif($params['type'] === 'file')
                                                             <div class="input-group mb-3">
                                                                 <label class="col-sm-2 px-0 col-form-label">{{ $params['field'] }}</label>
                                                                 <div class="custom-file">
-                                                                    <input type="file" name="{{ $params['field'] }}" class="custom-file-input" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}">
+                                                                    <input type="file" name="{{ $params['field'] }}" class="custom-file-input" id="params-{{ $data['apiName'] }}-{{ $params['field'] }}" @if($params['optional']) required @endif>
                                                                     <label class="custom-file-label" for="validatedCustomFile">{{ $params['field'] }}</label>
                                                                 </div>
                                                                 <div class="input-group-append">
