@@ -36,8 +36,8 @@ class ApiDocServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/Route/routes.php');
 
         $this->publishes([
-            __DIR__ . '/../config' => base_path('config'),
-            __DIR__ . '/../static' => base_path('public')
+            __DIR__ . '/../configs' => base_path('config'),
+            __DIR__ . '/../statics' => base_path('public')
         ]);
     }
 }
