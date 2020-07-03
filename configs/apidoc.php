@@ -22,12 +22,12 @@ return [
     'dir' => 'App/Http/Controllers',
 
     /**
-     * Directory to be excluded, relative to dir
+     * Directory to be excluded, relative to dir, array type
      */
     'except_folders' => ['V3'],
 
     /**
-     * Files to be excluded, relative to dir
+     * Files to be excluded, relative to dir, array type
      */
     'except_files' => ['Controller.php', 'V3/DemoController.php'],
 
@@ -37,14 +37,23 @@ return [
     'view' => '',
 
     /**
-     * local language
-     */
-    'lang' => '',
-
-    /**
      * local translation
      */
     'local' => [
+        'en' => [
+            'header' => 'request header',
+            'form' => 'form',
+            'header-param' => 'request header parameters',
+            'form-param' => 'form parameters',
+            'field' => 'field',
+            'type' => 'type',
+            'description' => 'description',
+            'optional' => 'optional',
+            'send-examples-request' => 'send a sample request',
+            'send-request' => 'send request',
+            'return-result' => 'return result',
+            'choose' => 'choose'
+        ],
         'zh-CN' => [
             'header' => '请求头',
             'form' => '表单',
