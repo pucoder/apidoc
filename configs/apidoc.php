@@ -19,7 +19,7 @@ return [
     /**
      * Need to provide api documentation directory
      */
-    'dir' => 'App/Http/Controllers',
+    'dir' => 'app/Http/Controllers',
 
     /**
      * Directory to be excluded, relative to dir, array type

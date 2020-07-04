@@ -67,10 +67,9 @@ class ApiDocController extends Controller
                     // 排除非php文件和例外的文件
                     if (pathinfo($file)['extension'] === 'php' && !in_array($file, $except_files)) {
                         $path = $dir. '/' . $file;
-                        $path = str_replace(base_path(), '', $path);
-                        $path = str_replace('.php', '', $path);
+                        $path = str_replace([base_path(), '.php'], ['', ''], $path);
                         $path = ltrim($path, '/');
-                        $path = str_replace('/', '\\', $path);
+                        $path = str_replace(['/', 'app'], ['\\', 'App'], $path);
                         array_push($file_lists, $path);
                     }
                 } else {
