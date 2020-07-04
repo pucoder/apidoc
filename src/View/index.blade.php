@@ -1,18 +1,12 @@
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ isset($_COOKIE["apidoc-language"]) ? $_COOKIE["apidoc-language"] : str_replace('_', '-', app()->getLocale()) }}" data-local='{!! json_encode(config('apidoc.local'), true) !!}'>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{{ config('apidoc.title') }}</title>
 
-    <link href="/vendor/apidoc/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .text-limegreen {color: limegreen;}/*字符串的样式*/
-        .text-darkorange {color: darkorange;}/*数字的样式*/
-        .text-orange { color: orange;}/*布尔型数据的样式*/
-        .text-magenta { color: magenta;}/*null值的样式*/
-    </style>
+    <link href="{{ asset('vendor/apidoc/css/apidoc.min.css') }}" rel="stylesheet">
 </head>
-<body>
+<body class="bg-white">
 <div class="container-fluid px-0">
     <div class="row mx-0">
         <nav class="col-2 bg-light px-0 position-fixed">
@@ -36,9 +30,16 @@
             <div class="header mb-3 pb-3 border-bottom">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-2">
                     <h1>{{ config('apidoc.name') }}</h1>
-{{--                    <div class="btn-toolbar mb-2 mb-md-0">--}}
-{{--                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"><span data-feather="calendar"></span>This week</button>--}}
-{{--                    </div>--}}
+                    <div class="form-row align-items-center">
+                        <div class="col-auto">
+                            <label class="mr-sm-2 sr-only" for="language-select">Preference</label>
+                            <select class="custom-select mr-sm-2" id="language-select">
+                                @foreach(config('apidoc.local') as $key => $lang)
+                                    <option value="{{ $key }}">{{ $key }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <h3>{!! config('apidoc.description') !!}</h3>
             </div>
@@ -122,7 +123,7 @@
                                         </nav>
                                         <div class="tab-content mt-2">
                                             <div class="tab-pane fade show active">
-                                                <p class="bg-dark text-white pl-1 rounded json" style="white-space: pre;">
+                                                <p class="bg-dark text-white pl-1 rounded example json" style="white-space: pre;">
                                                     {{ $data['apiHeaderExample'][1] }}
                                                 </p>
                                             </div>
@@ -137,7 +138,7 @@
                                         </nav>
                                         <div class="tab-content mt-2">
                                             <div class="tab-pane fade show active">
-                                                <p class="bg-dark text-white pl-1 rounded json" style="white-space: pre;">
+                                                <p class="bg-dark text-white pl-1 rounded example json" style="white-space: pre;">
                                                     {{ $data['apiParamExample'][1] }}
                                                 </p>
                                             </div>
@@ -152,7 +153,7 @@
                                         </nav>
                                         <div class="tab-content mt-2">
                                             <div class="tab-pane fade show active">
-                                                <p class="bg-dark text-white pl-1 rounded json" style="white-space: pre;">
+                                                <p class="bg-dark text-white pl-1 rounded example json" style="white-space: pre;">
                                                     {{ $data['apiSuccessExample'][1] }}
                                                 </p>
                                             </div>
@@ -167,7 +168,7 @@
                                         </nav>
                                         <div class="tab-content mt-2">
                                             <div class="tab-pane fade show active">
-                                                <p class="bg-dark text-white pl-1 rounded json" style="white-space: pre;">
+                                                <p class="bg-dark text-white pl-1 rounded example json" style="white-space: pre;">
                                                     {{ $data['apiErrorExample'][1] }}
                                                 </p>
                                             </div>
@@ -276,113 +277,19 @@
                 @endforeach
             </div>
         </main>
+        <footer class="col-10 ml-auto px-5 py-3">
+            <div class="d-flex justify-content-between">
+                <p class="m-0">
+                    <a href="https://github.com/pucoder/apidoc/blob/master/LICENSE" class="text-decoration-none">MIT License</a>
+                    Copyright (c) 2019-2020 pudejun 渝ICP备<a href="http://www.beian.miit.gov.cn/" class="text-decoration-none">20003819</a>号
+                </p>
+                <p class="m-0">
+                    Powered by <a href="http://apidoc.pudejun.com/" class="text-decoration-none">apidoc</a>
+                </p>
+            </div>
+        </footer>
     </div>
 </div>
-<script src="/vendor/apidoc/js/bootstrap.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function(){
-        // 设置语言
-        let lang = $('html').attr('lang');
-        $.each(JSON.parse('{!! json_encode(config('apidoc.local'), true) !!}'), function (key, val) {
-            $.each(val,function (k, v) {
-                if (lang === key) {
-                    $('.lang-' + k).text(v);
-                }
-            })
-        });
-        // 关闭返回结果操作
-        $('.closes').click(function () {
-            let name = $(this).data('name');
-            $('#collapse-' + name).collapse('hide');
-        });
-        // 发送请求操作
-        $('.submit').click(function () {
-            let method = $(this).data('method');
-            let url = $(this).data('url');
-            let name = $(this).data('name');
-            let files = $("#form-" + name + " input[type='file']");
-
-            let data = new FormData(document.getElementById("form-" + name));
-
-            let headers = {};
-            let params = {};
-            let delete_key = [];
-            for (let key of data.keys()) {
-                // console.dir("key:" + key + " value:" + data.get(key));
-                if (key.indexOf("headers") !== -1) {
-                    let field = key.substring(7).replace(/\[|]/g,'');
-                    headers[field] = data.get(key);
-                    delete_key.push(key);
-                } else {
-                    if (files.length <= 0) {
-                        params[key] = data.get(key);
-                    } else {
-                        params = data;
-                    }
-                }
-            }
-
-            $.each(delete_key, function (key, val) {
-                data.delete(val);
-            });
-
-            let ajaxRequest = {
-                url: url,
-                type: method,
-                headers: headers,
-                data: params,
-                success:function (res) {
-                    $('#collapse-' + name + ' .result').html(syntaxHighlight(JSON.stringify(res)));
-                    $('#collapse-' + name).collapse('show');
-                },
-                error: function (res) {
-                    $('#collapse-' + name + ' .result').html(syntaxHighlight(JSON.stringify(res.responseJSON)));
-                    $('#collapse-' + name).collapse('show');
-                }
-            };
-
-            if (files.length > 0) {
-                ajaxRequest.processData = false;
-                ajaxRequest.contentType = false;
-            }
-
-            $.ajax(ajaxRequest);
-        });
-        // 载入示例
-        $.each($('.json'),function () {
-            let json = $(this).text();
-            $(this).html(syntaxHighlight(json));
-        });
-    });
-
-    /**
-     * Json 语法高亮
-     *
-     * @param json
-     * @returns {string}
-     */
-    function syntaxHighlight(json) {
-        json = JSON.stringify(JSON.parse(json), null, "\t");
-
-        return json.replace(/<br>/g, ' ').replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
-            function(match) {
-                let cls = 'text-darkorange';
-                if (/^"/.test(match)) {
-                    if (/:$/.test(match)) {
-                        cls = 'text-white';
-                    } else {
-                        cls = 'text-limegreen';
-                    }
-                } else if (/true|false/.test(match)) {
-                    cls = 'text-orange';
-                } else if (/null/.test(match)) {
-                    cls = 'text-magenta';
-                }
-
-                return '<span class="' + cls + '">' + match + '</span>';
-            }
-        );
-    }
-</script>
+<script src="{{ asset('vendor/apidoc/js/apidoc.min.js') }}"></script>
 </body>
 </html>

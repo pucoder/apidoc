@@ -1,11 +1,14 @@
+# laravel and lumen api document package
 
-# install package
+[Documentation](http://apidoc.pudejun..com/) and [Example](http://apidoc.pudejun.com/apidoc/)
+
+# Installation
 
 ```shell script
 composer require pucoder/apidoc
 ```
 
-# Instructions
+## Usage
 
 - lumen 
 
@@ -32,10 +35,23 @@ php artisan apidoc:publish
 
 > Please make relevant configuration in `config/apidoc.php` file before use
 
+Add some apidoc comments anywhere in your source code:
+
+```php
+/**
+ * @apiVersion 1.0.1
+ * @apiGroup Users
+ * @apiName v1-getUser
+ * @api get /v1/users/getUser Request User information
+ * @apiDescription Pass api_token in request header to get user information
+ * @apiHeader string Authorization User authorization credentials
+ * @apiHeaderExample request header example:
+ * {
+ *   "Authorization":"Bearer ......"
+ * }
+ */
+```
+
 - browse
 
 http://your-domain-name/apidoc
-
-- how to customize the view?
-
-Add the `view` key in the configuration file, for example:`'view' => 'apidoc'`, then the view file is `/resources/views/apidoc.blade.php`

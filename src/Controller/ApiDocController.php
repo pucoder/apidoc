@@ -7,6 +7,12 @@ use App\Http\Controllers\Controller;
 
 class ApiDocController extends Controller
 {
+    /**
+     * 展示注释列表
+     *
+     * @return \Illuminate\View\View|\Laravel\Lumen\Application
+     * @throws \ReflectionException
+     */
     public function index()
     {
         $dir = base_path(config('apidoc.dir'));
@@ -104,9 +110,7 @@ class ApiDocController extends Controller
         $array_documents = $this->getDocumentsArray($string_documents);
 
         // 获取所有方法的注释（处理后的数组）
-        $json_documents = $this->getDocumentsJson($array_documents);
-
-        return $json_documents;
+        return $this->getDocumentsJson($array_documents);
     }
 
     /**
@@ -160,8 +164,7 @@ class ApiDocController extends Controller
 
         foreach ($string_documents as $string_document) {
             if (strpos($string_document, '@api') !== false) {
-                $string_document = str_replace(["/**", "*/"], ['',''], $string_document);
-                $string_document = str_replace("\n     ", '', $string_document);
+                $string_document = str_replace(["/**", "*/", "\n     "], ['','',''], $string_document);
                 array_push($array_documents, explode("* @", $string_document));
             }
         }
@@ -169,6 +172,12 @@ class ApiDocController extends Controller
         return $array_documents;
     }
 
+    /**
+     * 获取完整数据
+     *
+     * @param $array_documents
+     * @return array
+     */
     protected function getDocumentsJson($array_documents)
     {
         $json_documents = [];
@@ -180,7 +189,12 @@ class ApiDocController extends Controller
         return $json_documents;
     }
 
-
+    /**
+     * 设置完整数据
+     *
+     * @param $documents
+     * @return array
+     */
     protected function setJson($documents)
     {
         $json = [];
@@ -189,9 +203,8 @@ class ApiDocController extends Controller
         $sample_request = false;
         foreach ($documents as $document) {
             // 第一个空格的位置
-            $first = mb_stripos($document, " ");
-            $key = mb_substr($document, 0, $first);
-            $value = mb_substr($document, $first + 1);
+            $key = strs_num_str($document, 1, " ")[0];
+            $value = strs_num_str($document, 1, " ")[1];
 
             // 处理描述
             if ($key === 'apiDescription') {
@@ -200,81 +213,57 @@ class ApiDocController extends Controller
 
             // 处理示例
             if (mb_strpos($key, 'Example') !== false) {
-                $value = str_replace("* ", "", $value);
-                $first = mb_stripos($value, ":");
-                $value = [mb_substr($value, 0, $first), mb_substr($value, $first + 1)];
+                $value = strs_num_str($value, 1, ':');
             }
 
             $value = str_replace("*", "", $value);
 
             // 处理接口
             if ($key === 'api') {
-                $items = explode(" ", $value);
-                $json['apiTitle'] = '';
-                foreach ($items as $key => $value) {
-                    if ($key === 0) {
-                        $json['apiType'] = rtrim(ltrim($value, '{'), "}");
-                    } elseif ($key === 1) {
-                        $json['apiUrl'] = $value;
-                    } else {
-                        $json['apiTitle'] .= $value . ' ';
-                    }
-                }
+                $apiType = strs_num_str($value, 1, " ");
+                $apiUrl = strs_num_str($apiType[1], 1, " ");
+                $json['apiType'] = $apiType[0];
+                $json['apiUrl'] = $apiUrl[0];
+                $json['apiTitle'] = $apiUrl[1];
             }
             // 处理请求头
             elseif ($key === 'apiHeader') {
-                $param = explode(" ", $value);
-                $item['description'] = '';
-                foreach ($param as $key => $value) {
-                    if ($key === 0) {
-                        $item['type'] = rtrim(ltrim($value, '{'), "}");
-                    } elseif ($key === 1) {
-                        if (strpos($value, '[') !== false) {
-                            $item['field'] = rtrim(ltrim($value, '['), "]");
-                            $item['optional'] = true;
-                        } else {
-                            $item['field'] = $value;
-                            $item['optional'] = false;
-                        }
-                    } else {
-                        $item['description'] .= $value . ' ';
-                    }
-                }
-                $item['description'] = rtrim($item['description'], " ");
-                array_push($headers, $item);
+                array_push($headers, $this->setForm($value));
             }
-            // 处理参数
+            // 处理表单
             elseif ($key === 'apiParam') {
-                $param = explode(" ", $value);
-                $item['description'] = '';
-                foreach ($param as $key => $value) {
-                    if ($key === 0) {
-                        $item['type'] = rtrim(ltrim($value, '{'), "}");
-                    } elseif ($key === 1) {
-                        if (strpos($value, '[') !== false) {
-                            $item['field'] = rtrim(ltrim($value, '['), "]");
-                            $item['optional'] = true;
-                        } else {
-                            $item['field'] = $value;
-                            $item['optional'] = false;
-                        }
-                    } else {
-                        $item['description'] .= $value . ' ';
-                    }
-                }
-                $item['description'] = rtrim($item['description'], " ");
-                array_push($params, $item);
-            } elseif ($key === 'apiSampleRequest') {
+                array_push($params, $this->setForm($value));
+            }
+            // 处理简单请求
+            elseif ($key === 'apiSampleRequest') {
                 $sample_request = ($value === 'true');
             } else {
                 $json[$key] = $value;
             }
         }
-        $json['apiSampleRequest'] = $sample_request;
         $json['apiHeaders'] = $headers;
         $json['apiParams'] = $params;
+        $json['apiSampleRequest'] = $sample_request;
 
         return $json;
     }
 
+    /**
+     * 设置请求表单参数
+     *
+     * @param $value
+     * @return mixed
+     */
+    protected function setForm($value)
+    {
+        $item_type = strs_num_str($value, 1, " ");
+        $item_field = strs_num_str($item_type[1], 1, " ");
+        $item['type'] = $item_type[0];
+        $field = strs_between($item_field[0], '[', ']');
+        $item['field'] = $field ?: $item_field[0];
+        $item['optional'] = $field ? true : false;
+        $item['description'] = $item_field[1];
+
+        return $item;
+    }
 }

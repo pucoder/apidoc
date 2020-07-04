@@ -24,17 +24,12 @@ return [
     /**
      * Directory to be excluded, relative to dir, array type
      */
-    'except_folders' => ['V3'],
+    'except_folders' => ['auth'],
 
     /**
      * Files to be excluded, relative to dir, array type
      */
-    'except_files' => ['Controller.php', 'V3/DemoController.php'],
-
-    /**
-     * view file
-     */
-    'view' => '',
+    'except_files' => ['Controller.php'],
 
     /**
      * local translation
