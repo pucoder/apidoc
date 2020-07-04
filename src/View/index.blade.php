@@ -280,8 +280,7 @@
         <footer class="col-10 ml-auto px-5 py-3">
             <div class="d-flex justify-content-between">
                 <p class="m-0">
-                    <a href="https://github.com/pucoder/apidoc/blob/master/LICENSE" class="text-decoration-none">MIT License</a>
-                    Copyright (c) 2019-2020 pudejun 渝ICP备<a href="http://www.beian.miit.gov.cn/" class="text-decoration-none">20003819</a>号
+                    <a href="https://github.com/pucoder/apidoc/blob/master/LICENSE" class="text-decoration-none">MIT License</a> Copyright (c) 2019-2020 pudejun
                 </p>
                 <p class="m-0">
                     Powered by <a href="http://apidoc.pudejun.com/" class="text-decoration-none">apidoc</a>
