@@ -266,7 +266,7 @@
                                                 <a class="btn btn-xs btn-dark text-white px-1 py-0 closes" href="javascript:void(0)" data-name="{{ $data['apiName'] }}">X</a>
                                             </div>
 
-                                            <div class="bg-dark text-white rounded result" style="white-space: pre;"></div>
+                                            <div class="bg-dark text-white rounded result overflow-auto" style="white-space: pre;"></div>
                                         </div>
                                     @endif
                                 </div>

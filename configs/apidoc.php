@@ -29,7 +29,7 @@ return [
     /**
      * Files to be excluded, relative to dir, array type
      */
-    'except_files' => ['Controller.php'],
+    'except_files' => ['Controller.php', 'ExampleController.php'],
 
     /**
      * local translation
