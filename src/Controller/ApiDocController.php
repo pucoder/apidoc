@@ -163,7 +163,7 @@ class ApiDocController extends Controller
 
         foreach ($string_documents as $string_document) {
             if (strpos($string_document, '@api') !== false) {
-                $string_document = str_replace(["/**", "*/", "\n     "], ['','',''], $string_document);
+                $string_document = str_replace(["/**", "*/", "\r", "\n     "], ['','','',''], $string_document);
                 array_push($array_documents, explode("* @", $string_document));
             }
         }
