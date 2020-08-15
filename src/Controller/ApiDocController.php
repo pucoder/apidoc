@@ -10,11 +10,15 @@ class ApiDocController extends Controller
     /**
      * 展示注释列表
      *
-     * @return \Illuminate\View\View|\Laravel\Lumen\Application
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      * @throws \ReflectionException
      */
     public function index()
     {
+        // 如果配置文件不存在
+        if (!file_exists(base_path('config/apidoc.php'))) {
+            return 'the "config/apidoc.php" file does not exist!';
+        }
         $dir = base_path(config('apidoc.dir'));
         $except_folders = config('apidoc.except_folders');
         $except_files = config('apidoc.except_files');
